@@ -1,0 +1,17 @@
+launcherhub/
+├── src/
+│   └── launcherhub.sh
+├── debian/
+│   ├── control
+│   ├── postinst
+│   └── prerm
+├── usr/
+│   ├── share/applications/
+│   │   └── launcherhub.desktop
+│   └── share/icons/hicolor/64x64/apps/
+│       └── launcherhub.png    # placeholder for now
+├── Makefile
+├── build.sh
+├── README.md
+├── CHANGELOG.md
+└── LICENSE

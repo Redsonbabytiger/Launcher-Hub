@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Launcher Hub
+Comment=Customizable app and VM launcher
+Exec=launcherhub
+Icon=launcherhub
+Terminal=false
+Type=Application
+Categories=Utility;

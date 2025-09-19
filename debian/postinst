@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+echo "Launcher Hub installed successfully."
+exit 0
