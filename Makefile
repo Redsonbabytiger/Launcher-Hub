@@ -12,6 +12,7 @@ build:
 	@echo "==> Building $(PACKAGE) v$(VERSION) .deb"
 	mkdir -p $(BUILD_DIR)
 	cp -r DEBIAN usr src $(BUILD_DIR)/
+	mkdir -p $(BUILD_DIR)/usr/local/bin
 	mv $(BUILD_DIR)/src/$(PACKAGE).sh $(BUILD_DIR)/usr/local/bin/$(PACKAGE)
 	rm -rf $(BUILD_DIR)/src
 	chmod -R 755 $(BUILD_DIR)/DEBIAN
