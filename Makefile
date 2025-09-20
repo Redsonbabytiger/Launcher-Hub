@@ -1,5 +1,5 @@
 PACKAGE = launcherhub
-VERSION = 1.0
+VERSION = 1.1
 ARCH = amd64
 BUILD_DIR = $(PACKAGE)_$(VERSION)
 
