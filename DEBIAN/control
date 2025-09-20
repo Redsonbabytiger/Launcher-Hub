@@ -4,7 +4,7 @@ Section: utils
 Priority: optional
 Architecture: amd64
 Depends: yad, gnome-terminal, xdg-utils
-Maintainer: Your Name <you@example.com>
+Maintainer: Brigham Johns brighamjohns@gmail.com
 Description: Launcher Hub - A customizable GUI hub/launcher
  A YAD-based application launcher and productivity hub.
  Supports websites, apps, scripts, and menus.
