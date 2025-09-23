@@ -1,30 +1,36 @@
-PACKAGE = launcherhub
-VERSION = 1.0
-ARCH = amd64
-BUILD_DIR = $(PACKAGE)_$(VERSION)
+APP_NAME = launcherhub
+VERSION ?= 1.0
+ARCH    ?= amd64
+DEB_DIR = build/$(APP_NAME)_$(VERSION)_$(ARCH)
 
-all: clean build
+.PHONY: all clean build
 
-clean:
-	rm -rf $(BUILD_DIR) $(PACKAGE)_$(VERSION).deb
+all: build
 
 build:
-	@echo "==> Building $(PACKAGE) v$(VERSION) .deb"
-	mkdir -p $(BUILD_DIR)
-	cp -r DEBIAN usr src $(BUILD_DIR)/
-	mkdir -p $(BUILD_DIR)/usr/local/bin
-	mv $(BUILD_DIR)/src/$(PACKAGE).sh $(BUILD_DIR)/usr/local/bin/$(PACKAGE)
-	rm -rf $(BUILD_DIR)/src
-	chmod -R 755 $(BUILD_DIR)/DEBIAN
-	chmod +x $(BUILD_DIR)/usr/local/bin/$(PACKAGE)
-	dpkg-deb --build $(BUILD_DIR)
+	@echo "📦 Building $(APP_NAME) $(VERSION) ..."
+	rm -rf build
+	mkdir -p $(DEB_DIR)/usr/local/bin
+	mkdir -p $(DEB_DIR)/DEBIAN
 
-install:
-	@echo "==> Installing package"
-	sudo dpkg -i $(PACKAGE)_$(VERSION).deb || sudo apt -f install -y
+	# Copy app
+	cp launcherhub.sh $(DEB_DIR)/usr/local/bin/$(APP_NAME)
+	chmod 755 $(DEB_DIR)/usr/local/bin/$(APP_NAME)
 
-uninstall:
-	@echo "==> Removing package"
-	sudo dpkg -r $(PACKAGE)
+	# Control file
+	cat > $(DEB_DIR)/DEBIAN/control <<EOF
+Package: $(APP_NAME)
+Version: $(VERSION)
+Section: utils
+Priority: optional
+Architecture: $(ARCH)
+Maintainer: You <you@example.com>
+Description: Launcher Hub - A GUI hub and VM manager
+EOF
 
-reinstall: clean build install
+	# Build .deb
+	dpkg-deb --build --root-owner-group $(DEB_DIR)
+	mv build/*.deb .
+
+clean:
+	rm -rf build *.deb

@@ -39,9 +39,9 @@ if [ -f "src/launcherhub.sh" ] && grep -q "^VERSION=" src/launcherhub.sh; then
   sed -i "s/^VERSION=.*/VERSION=\"$DEB_VERSION\"/" src/launcherhub.sh
 fi
 
-# Update Makefile VERSION line
-if grep -q "^VERSION ?=" Makefile; then
-  sed -i "s/^VERSION ?=.*/VERSION ?= $DEB_VERSION/" Makefile
+# Update Makefile VERSION line (match 'VERSION = ...' or 'VERSION ?= ...')
+if grep -q "^VERSION[ ]*=" Makefile; then
+  sed -i "s/^VERSION[ ]*=.*/VERSION = $DEB_VERSION/" Makefile
 fi
 
 # Update changelog (prepend entry)
