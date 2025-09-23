@@ -1,5 +1,5 @@
 APP_NAME = launcherhub
-VERSION ?= 1.0
+VERSION ?= 1.1
 ARCH    ?= amd64
 DEB_DIR = build/$(APP_NAME)_$(VERSION)_$(ARCH)
 
