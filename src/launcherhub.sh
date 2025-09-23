@@ -4,7 +4,7 @@ done
 # Launcher Hub - Main script: GUI-based hub/launcher using YAD
 # Maintainer: Brigham Johns <brighamjohns@gmail.com>
 
-VERSION="1.0" # This line is auto-updated by release.sh
+VERSION="1.2"
 CONFIG="$HOME/.launcherhub.conf"
 REQUIRED_CMDS=(yad awk xdg-open)
 
