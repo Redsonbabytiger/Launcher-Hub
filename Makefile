@@ -1,9 +1,12 @@
+# Makefile for Launcher Hub
 APP_NAME = launcherhub
 VERSION ?= 1.1
 ARCH    ?= amd64
 DEB_DIR = build/$(APP_NAME)_$(VERSION)_$(ARCH)
+SRC_DIR = src
+USR_SHARE = usr/share
 
-.PHONY: all clean build
+.PHONY: all clean build install
 
 all: build
 
@@ -12,13 +15,20 @@ build:
 	rm -rf build
 	mkdir -p $(DEB_DIR)/usr/local/bin
 	mkdir -p $(DEB_DIR)/DEBIAN
+	mkdir -p $(DEB_DIR)/$(USR_SHARE)/applications
+	mkdir -p $(DEB_DIR)/$(USR_SHARE)/icons/hicolor/64x64/apps
 
-	# Copy app
-	cp launcherhub.sh $(DEB_DIR)/usr/local/bin/$(APP_NAME)
-	chmod 755 $(DEB_DIR)/usr/local/bin/$(APP_NAME)
+	# Copy main script
+	install -m 755 $(SRC_DIR)/launcherhub.sh $(DEB_DIR)/usr/local/bin/$(APP_NAME)
 
-	# Control file
-cat > $(DEB_DIR)/DEBIAN/control <<EOF
+	# Copy .desktop file
+	cp $(USR_SHARE)/applications/launcherhub.desktop $(DEB_DIR)/$(USR_SHARE)/applications/
+
+	# Copy icon
+	cp $(USR_SHARE)/icons/hicolor/64x64/apps/launcherhub.png $(DEB_DIR)/$(USR_SHARE)/icons/hicolor/64x64/apps/
+
+	# Generate DEBIAN/control file at build time
+	cat > $(DEB_DIR)/DEBIAN/control <<EOF
 Package: $(APP_NAME)
 Version: $(VERSION)
 Section: utils
@@ -35,3 +45,6 @@ EOF
 
 clean:
 	rm -rf build *.deb
+
+install: build
+	sudo dpkg -i $(APP_NAME)_$(VERSION)_$(ARCH).deb
