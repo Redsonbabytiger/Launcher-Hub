@@ -18,7 +18,7 @@ build:
 	chmod 755 $(DEB_DIR)/usr/local/bin/$(APP_NAME)
 
 	# Control file
-	cat > $(DEB_DIR)/DEBIAN/control <<EOF
+cat > $(DEB_DIR)/DEBIAN/control <<EOF
 Package: $(APP_NAME)
 Version: $(VERSION)
 Section: utils
@@ -26,6 +26,7 @@ Priority: optional
 Architecture: $(ARCH)
 Maintainer: You <you@example.com>
 Description: Launcher Hub - A GUI hub and VM manager
+
 EOF
 
 	# Build .deb
