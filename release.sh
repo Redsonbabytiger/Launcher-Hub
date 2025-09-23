@@ -35,8 +35,8 @@ if [ -f "DEBIAN/control" ]; then
 fi
 
 # Update launcherhub.sh (if version line exists)
-if grep -q "^VERSION=" launcherhub.sh; then
-  sed -i "s/^VERSION=.*/VERSION=\"$DEB_VERSION\"/" launcherhub.sh
+if [ -f "src/launcherhub.sh" ] && grep -q "^VERSION=" src/launcherhub.sh; then
+  sed -i "s/^VERSION=.*/VERSION=\"$DEB_VERSION\"/" src/launcherhub.sh
 fi
 
 # Update Makefile VERSION line
