@@ -49,9 +49,14 @@ if [ -f "CHANGELOG.md" ]; then
   sed -i "1i## $VERSION - $(date +%Y-%m-%d)\n- Released $VERSION\n" CHANGELOG.md
 fi
 
-# Commit version bump
-git add DEBIAN/control launcherhub.sh Makefile CHANGELOG.md 2>/dev/null || true
-git commit -m "Bump version to $VERSION"
+
+# Commit version bump if there are staged changes
+git add DEBIAN/control src/launcherhub.sh Makefile CHANGELOG.md 2>/dev/null || true
+if ! git diff --cached --quiet; then
+  git commit -m "Bump version to $VERSION"
+else
+  echo "No changes to commit. Proceeding to tag and push."
+fi
 
 echo "🏷️ Creating git tag $VERSION ..."
 git tag -a "$VERSION" -m "Release $VERSION"
