@@ -1,6 +1,6 @@
 # Makefile for Launcher Hub
 APP_NAME = launcherhub
-VERSION ?= 1.1
+VERSION ?= 1.2
 ARCH    ?= amd64
 DEB_DIR = build/$(APP_NAME)_$(VERSION)_$(ARCH)
 SRC_DIR = src
