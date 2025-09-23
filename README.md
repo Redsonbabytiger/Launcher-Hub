@@ -16,5 +16,9 @@ from a single clean interface.
 
 ## 📦 Installation
 ```bash
-make
-sudo make install
+# Add Launcher Hub APT repository
+echo "deb [trusted=yes] https://redsonbabytiger.github.io/launcherhub stable main" | sudo tee /etc/apt/sources.list.d/launcherhub.list
+
+# Update and install
+sudo apt update
+sudo apt install launcherhub
