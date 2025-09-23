@@ -28,7 +28,7 @@ build:
 	cp $(USR_SHARE)/icons/hicolor/64x64/apps/launcherhub.png $(DEB_DIR)/$(USR_SHARE)/icons/hicolor/64x64/apps/
 
 	# Generate DEBIAN/control file at build time
-	cat > $(DEB_DIR)/DEBIAN/control <<EOF
+ 	cat > $(DEB_DIR)/DEBIAN/control <<EOF
 Package: $(APP_NAME)
 Version: $(VERSION)
 Section: utils
