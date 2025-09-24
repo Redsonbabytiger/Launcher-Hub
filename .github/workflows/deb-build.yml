@@ -22,25 +22,25 @@ jobs:
       - name: Build .deb package
         run: |
           make clean build
-          mkdir -p repo/pool/main/l
-          mv *.deb repo/pool/main/l/
+          mkdir -p pool/main/l
+          mv *.deb pool/main/l/
 
       - name: Generate APT repo metadata
         run: |
-          mkdir -p repo/dists/stable/main/binary-amd64
-          dpkg-scanpackages repo/pool /dev/null > repo/dists/stable/main/binary-amd64/Packages
-          gzip -9c repo/dists/stable/main/binary-amd64/Packages > repo/dists/stable/main/binary-amd64/Packages.gz
+          mkdir -p dists/stable/main/binary-amd64
+          dpkg-scanpackages pool /dev/null > dists/stable/main/binary-amd64/Packages
+          gzip -9c dists/stable/main/binary-amd64/Packages > dists/stable/main/binary-amd64/Packages.gz
 
       - name: Upload APT repo to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./repo
+          publish_dir: ./
           publish_branch: gh-pages
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: repo/pool/main/l/*.deb
+          files: pool/main/l/*.deb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
