@@ -1,8 +1,8 @@
-Package: launcherhub
-Version: 1.2
+Package: @APP_NAME@
+Version: @VERSION@
 Section: utils
 Priority: optional
-Architecture: amd64
+Architecture: @ARCH@
 Depends: yad, gnome-terminal, xdg-utils
 Maintainer: Brigham Johns brighamjohns@gmail.com
 Description: Launcher Hub - A customizable GUI hub/launcher
