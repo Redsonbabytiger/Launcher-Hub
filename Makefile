@@ -5,6 +5,7 @@ ARCH    ?= amd64
 DEB_DIR = build/$(APP_NAME)_$(VERSION)_$(ARCH)
 SRC_DIR = src
 USR_SHARE = usr/share
+CONTROL_TEMPLATE = DEBIAN/control
 
 .PHONY: all clean build install
 
@@ -27,17 +28,12 @@ build:
 	# Copy icon
 	cp $(USR_SHARE)/icons/hicolor/64x64/apps/launcherhub.png $(DEB_DIR)/$(USR_SHARE)/icons/hicolor/64x64/apps/
 
-	# Generate DEBIAN/control file at build time
-	cat > $(DEB_DIR)/DEBIAN/control <<EOF
-Package: $(APP_NAME)
-Version: $(VERSION)
-Section: utils
-Priority: optional
-Architecture: $(ARCH)
-Maintainer: You <you@example.com>
-Description: Launcher Hub - A GUI hub and VM manager
-
-EOF
+	# Copy and update control file from template
+	sed \
+		-e 's/@APP_NAME@/$(APP_NAME)/g' \
+		-e 's/@VERSION@/$(VERSION)/g' \
+		-e 's/@ARCH@/$(ARCH)/g' \
+		$(CONTROL_TEMPLATE) > $(DEB_DIR)/DEBIAN/control
 
 	# Build .deb
 	dpkg-deb --build --root-owner-group $(DEB_DIR)
