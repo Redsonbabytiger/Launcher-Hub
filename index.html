@@ -35,7 +35,14 @@
     const branch = 'gh-pages';
 
     // Get the current path from the URL
-    let path = decodeURIComponent(window.location.pathname.replace(/^\/|\/$/g, ''));
+    let currentPath = window.location.pathname;
+    
+    // Handle /Launcher-Hub as root directory
+    if (currentPath === '/Launcher-Hub' || currentPath === '/Launcher-Hub/') {
+      currentPath = '/';
+    }
+    
+    let path = decodeURIComponent(currentPath.replace(/^\/|\/$/g, ''));
     document.getElementById('path').textContent = '/' + path;
 
     async function fetchContents(path) {
