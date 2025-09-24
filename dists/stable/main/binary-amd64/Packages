@@ -1,0 +1,16 @@
+Package: launcherhub
+Version: 1.2
+Architecture: amd64
+Maintainer: Brigham Johns brighamjohns@gmail.com
+Depends: yad, gnome-terminal, xdg-utils
+Filename: repo/pool/main/l/launcherhub_1.2_amd64.deb
+Size: 8578
+MD5sum: ef9bc484e23a00103fa292de74ff295d
+SHA1: 1129c01da7d59b73ff6b0d2a715e7ea71dde211d
+SHA256: 4424957c5c763e9c8b3a68cb0f52927996e0b653a1a0e0de14d9d4f44e123b33
+Section: utils
+Priority: optional
+Description: Launcher Hub - A customizable GUI hub/launcher
+ A YAD-based application launcher and productivity hub.
+ Supports websites, apps, scripts, and menus.
+
