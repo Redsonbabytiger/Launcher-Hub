@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dynamic Package Repository Index</title>
+  <style>
+    body { font-family: sans-serif; margin: 2em; }
+    ul { list-style-type: none; padding: 0; }
+    li { margin: 0.5em 0; }
+    a { text-decoration: none; color: #0366d6; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>Package Repository Index</h1>
+  <div id="index"></div>
+  <script>
+    // Replace these with your actual GitHub username and repo name
+    const owner = 'Redsonbabytiger';
+    const repo = 'Launcher-Hub';
+    const branch = 'gh-pages'; // or your pages branch
+
+    // Get the current path from the URL
+    const path = window.location.pathname.replace(/^\/|\/$/g, '');
+
+    async function fetchContents(path) {
+      const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
+      const response = await fetch(apiUrl);
+      if (!response.ok) return [];
+      return await response.json();
+    }
+
+    function renderIndex(contents) {
+      const ul = document.createElement('ul');
+      contents.forEach(item => {
+        const li = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = item.type === 'dir' ? `${item.name}/` : item.name;
+        link.textContent = item.name + (item.type === 'dir' ? '/' : '');
+        li.appendChild(link);
+        ul.appendChild(li);
+      });
+      document.getElementById('index').appendChild(ul);
+    }
+
+    fetchContents(path).then(renderIndex);
+  </script>
+</body>
+</html>
