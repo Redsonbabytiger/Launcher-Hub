@@ -16,6 +16,6 @@ from a single clean interface.
 
 ## 📦 Installation
 ```bash
-echo "deb [trusted=yes] https://redsonbabytiger.github.io/launcherhub stable main" | sudo tee /etc/apt/sources.list.d/launcherhub.list
+echo "deb [trusted=yes] https://redsonbabytiger.github.io/Launcher-Hub stable main" | sudo tee /etc/apt/sources.list.d/launcherhub.list
 sudo apt update
 sudo apt install launcherhub
