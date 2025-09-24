@@ -2,26 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dynamic Package Repository Index</title>
+  <title>Index of /</title>
   <style>
-    body { font-family: sans-serif; margin: 2em; }
-    ul { list-style-type: none; padding: 0; }
-    li { margin: 0.5em 0; }
-    a { text-decoration: none; color: #0366d6; }
+    body { font-family: monospace; background: #fff; color: #222; margin: 2em; }
+    h1 { font-size: 1.2em; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { padding: 4px 8px; border-bottom: 1px solid #eee; }
+    th { background: #f7f7f7; text-align: left; }
+    tr:hover td { background: #f0f0f0; }
+    a { color: #0066cc; text-decoration: none; }
     a:hover { text-decoration: underline; }
+    .right { text-align: right; }
+    .desc { color: #888; }
   </style>
 </head>
 <body>
-  <h1>Package Repository Index</h1>
-  <div id="index"></div>
+  <h1>Index of <span id="path"></span></h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Last modified</th>
+        <th class="right">Size</th>
+        <th class="desc">Description</th>
+      </tr>
+    </thead>
+    <tbody id="listing"></tbody>
+  </table>
   <script>
-    // Replace these with your actual GitHub username and repo name
     const owner = 'Redsonbabytiger';
     const repo = 'Launcher-Hub';
-    const branch = 'gh-pages'; // or your pages branch
+    const branch = 'gh-pages';
 
     // Get the current path from the URL
-    const path = window.location.pathname.replace(/^\/|\/$/g, '');
+    let path = decodeURIComponent(window.location.pathname.replace(/^\/|\/$/g, ''));
+    document.getElementById('path').textContent = '/' + path;
 
     async function fetchContents(path) {
       const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
@@ -30,20 +45,67 @@
       return await response.json();
     }
 
-    function renderIndex(contents) {
-      const ul = document.createElement('ul');
-      contents.forEach(item => {
-        const li = document.createElement('li');
-        const link = document.createElement('a');
-        link.href = item.type === 'dir' ? `${item.name}/` : item.name;
-        link.textContent = item.name + (item.type === 'dir' ? '/' : '');
-        li.appendChild(link);
-        ul.appendChild(li);
-      });
-      document.getElementById('index').appendChild(ul);
+    function formatSize(size) {
+      if (size === undefined) return '';
+      if (size < 1024) return size + ' B';
+      if (size < 1024 * 1024) return (size / 1024).toFixed(1) + ' KB';
+      return (size / (1024 * 1024)).toFixed(1) + ' MB';
     }
 
-    fetchContents(path).then(renderIndex);
+    function formatDate(iso) {
+      if (!iso) return '';
+      const d = new Date(iso);
+      return d.toISOString().replace('T', ' ').substring(0, 19);
+    }
+
+    async function renderListing(path) {
+      const listing = document.getElementById('listing');
+      listing.innerHTML = '';
+      const contents = await fetchContents(path);
+
+      // Add parent directory link if not at root
+      if (path) {
+        const parent = path.split('/').slice(0, -1).join('/');
+        listing.innerHTML += `
+          <tr>
+            <td><a href="../">Parent Directory</a></td>
+            <td></td>
+            <td class="right"></td>
+            <td class="desc"></td>
+          </tr>
+        `;
+      }
+
+      // Sort directories first, then files
+      contents.sort((a, b) => {
+        if (a.type === b.type) return a.name.localeCompare(b.name);
+        return a.type === 'dir' ? -1 : 1;
+      });
+
+      for (const item of contents) {
+        // Fetch commit info for last modified date
+        let lastModified = '';
+        try {
+          const commitsUrl = `https://api.github.com/repos/${owner}/${repo}/commits?path=${encodeURIComponent(path ? path + '/' + item.name : item.name)}&sha=${branch}&per_page=1`;
+          const commitsResp = await fetch(commitsUrl);
+          if (commitsResp.ok) {
+            const commits = await commitsResp.json();
+            if (commits.length > 0) lastModified = formatDate(commits[0].commit.committer.date);
+          }
+        } catch {}
+
+        listing.innerHTML += `
+          <tr>
+            <td><a href="${item.name}${item.type === 'dir' ? '/' : ''}">${item.name}${item.type === 'dir' ? '/' : ''}</a></td>
+            <td>${lastModified}</td>
+            <td class="right">${item.type === 'file' ? formatSize(item.size) : ''}</td>
+            <td class="desc"></td>
+          </tr>
+        `;
+      }
+    }
+
+    renderListing(path);
   </script>
 </body>
 </html>
