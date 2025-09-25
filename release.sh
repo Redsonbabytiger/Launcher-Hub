@@ -29,14 +29,19 @@ fi
 
 echo "📦 Updating version numbers to $DEB_VERSION ..."
 
-# Update launcherhub.sh (if version line exists)
-if [ -f "src/launcherhub.sh" ] && grep -q "^VERSION=" src/launcherhub.sh; then
-  sed -i "s/^VERSION=.*/VERSION=\"$DEB_VERSION\"/" src/launcherhub.sh
+# Update DEBIAN/control
+if [ -f "DEBIAN/control" ]; then
+  sed -i "s/^Version:.*/Version: $DEB_VERSION/" DEBIAN/control
 fi
 
-# Update Makefile VERSION line (match 'VERSION = ...' or 'VERSION ?= ...')
-if [ -f "Makefile" ]; then
-  sed -i -E "s/^VERSION[ ]*(\?|)=.*/VERSION \1= $DEB_VERSION/" Makefile
+# Update launcherhub.sh (if version line exists)
+if grep -q "^VERSION=" launcherhub.sh; then
+  sed -i "s/^VERSION=.*/VERSION=\"$DEB_VERSION\"/" launcherhub.sh
+fi
+
+# Update Makefile VERSION line
+if grep -q "^VERSION ?=" Makefile; then
+  sed -i "s/^VERSION ?=.*/VERSION ?= $DEB_VERSION/" Makefile
 fi
 
 # Update changelog (prepend entry)
@@ -44,15 +49,13 @@ if [ -f "CHANGELOG.md" ]; then
   sed -i "1i## $VERSION - $(date +%Y-%m-%d)\n- Released $VERSION\n" CHANGELOG.md
 fi
 
-# Commit version bump if there are staged changes
-git add src/launcherhub.sh 2>/dev/null || true
-git add Makefile 2>/dev/null || true
-git add CHANGELOG.md 2>/dev/null || true
-if ! git diff --cached --quiet; then
-  git commit -m "Bump version to $VERSION"
-else
-  echo "No changes to commit. Proceeding to tag and push."
-fi
+# 🔨 Test build before committing
+echo "🛠️ Running test build..."
+make clean build
+
+# Commit version bump
+git add DEBIAN/control launcherhub.sh Makefile CHANGELOG.md 2>/dev/null || true
+git commit -m "Bump version to $VERSION"
 
 echo "🏷️ Creating git tag $VERSION ..."
 git tag -a "$VERSION" -m "Release $VERSION"
